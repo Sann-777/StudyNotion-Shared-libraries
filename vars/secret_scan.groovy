@@ -9,7 +9,7 @@ def call(Map config = [:]) {
             echo "📦 Installing Gitleaks..."
             sh '''
                 curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-arm64 \
-                  -o /usr/local/bin gitleaks
+                  -o /usr/local/bin/gitleaks
                 chmod +x /usr/local/bin/gitleaks
             '''
             echo "📦 Gitleaks installed"
