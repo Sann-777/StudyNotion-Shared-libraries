@@ -8,9 +8,18 @@ def call(Map config = [:]) {
         if (sh(script: "command -v gitleaks >/dev/null 2>&1", returnStatus: true) != 0) {
             echo "📦 Installing Gitleaks..."
             sh '''
-                curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-arm64 \
-                  -o /usr/local/bin/gitleaks
-                chmod +x /usr/local/bin/gitleaks
+                # Install build dependencies
+                sudo apt-get update -y
+                sudo apt-get install -y golang-go make git
+
+                # Clone & build
+                git clone https://github.com/gitleaks/gitleaks.git
+                cd gitleaks
+                make build
+
+                # Move binary to PATH
+                sudo mv gitleaks /usr/local/bin/gitleaks
+                gitleaks version
             '''
             echo "📦 Gitleaks installed"
         } else {
