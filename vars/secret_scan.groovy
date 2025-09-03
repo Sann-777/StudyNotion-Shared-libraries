@@ -8,8 +8,8 @@ def call(Map config = [:]) {
         if (sh(script: "command -v gitleaks >/dev/null 2>&1", returnStatus: true) != 0) {
             echo "📦 Installing Gitleaks..."
             sh '''
-                curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-arm64.tar.gz \
-                  | tar -xz -C /usr/local/bin gitleaks
+                curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-arm64 \
+                  -o /usr/local/bin gitleaks
                 chmod +x /usr/local/bin/gitleaks
             '''
             echo "📦 Gitleaks installed"
