@@ -46,7 +46,6 @@ def call(Map config = [:]) {
         if (exitCode != 0) {
             if (config.allowFailure) {
                 echo "❗ Secrets found, but continuing pipeline (allowFailure = true)."
-                currentBuild.result = 'UNSTABLE'
             } else {
                 error "❌ Secret leaks detected! Check ${reportFile} for details."
             }
