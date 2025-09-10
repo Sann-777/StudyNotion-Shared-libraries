@@ -2,7 +2,7 @@ def call(Map params) {
     def services = params.SERVICE ?: "all"
     def imageTag = params.IMAGE_TAG ?: "latest"
 
-    echo "🐳 Building + Tagging images (Docker Compose safe names)"
+    echo "🐳 Building + Tagging images (Docker Compose V2 safe)"
     echo "Selected SERVICE(s): ${services}"
     echo "New IMAGE_TAG: ${imageTag}"
 
@@ -21,8 +21,12 @@ def call(Map params) {
         echo "⚡ Building ${service} using Docker Compose"
         sh "docker-compose build ${service}"
 
-        // Get the actual image ID built by Docker Compose
-        def imageName = sh(script: "docker-compose images -q ${service}", returnStdout: true).trim()
+        // Get the built image name dynamically (works with Compose V2)
+        def imageName = sh(
+            script: "docker images --format '{{.Repository}}:{{.Tag}}' | grep '${service}' | head -n1",
+            returnStdout: true
+        ).trim()
+
         if (!imageName) {
             error "❌ Could not find built image for ${service}"
         }
