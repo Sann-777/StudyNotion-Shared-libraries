@@ -17,7 +17,7 @@ def call(Map params) {
         "frontend"
     ]
 
-    withCredentials([usernamePassword(credentialsId: 'docker-hub-creds',
+    withCredentials([usernamePassword(credentialsId: 'Docker',
                                       usernameVariable: 'DOCKER_USERNAME',
                                       passwordVariable: 'DOCKER_PASSWORD')]) {
         sh """
