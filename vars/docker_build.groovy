@@ -2,7 +2,7 @@ def call(Map params) {
     def services = params.SERVICE ?: "all"
     def imageTag = params.IMAGE_TAG ?: "latest"
 
-    echo "🐳 Building + Tagging images"
+    echo "🐳 Building + Tagging images (Docker Compose safe names)"
     echo "Selected SERVICE(s): ${services}"
     echo "New IMAGE_TAG: ${imageTag}"
 
@@ -18,14 +18,18 @@ def call(Map params) {
     ]
 
     def buildAndTag = { service ->
-        def localImage = "studynotion-${service}:latest"
-        def remoteImage = "asxhazard/studynotion-${service}:${imageTag}"
-
-        echo "⚡ Building ${service}"
+        echo "⚡ Building ${service} using Docker Compose"
         sh "docker-compose build ${service}"
 
-        echo "🏷️ Tagging ${localImage} → ${remoteImage}"
-        sh "docker tag ${localImage} ${remoteImage}"
+        // Get the actual image ID built by Docker Compose
+        def imageName = sh(script: "docker-compose images -q ${service}", returnStdout: true).trim()
+        if (!imageName) {
+            error "❌ Could not find built image for ${service}"
+        }
+
+        def remoteImage = "asxhazard/studynotion-${service}:${imageTag}"
+        echo "🏷️ Tagging image ${imageName} → ${remoteImage}"
+        sh "docker tag ${imageName} ${remoteImage}"
 
         echo "✅ Build + Tag complete for ${service}"
     }
