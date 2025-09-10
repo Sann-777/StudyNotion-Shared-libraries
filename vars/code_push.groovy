@@ -1,5 +1,5 @@
 def call(String url, String branch){
-    withCredentials([usernamePassword(credentialsId: 'GitHub', usernameVariable: 'GIT_USER',passwordVariable: 'GIT_PASS')]) {
+    withCredentials([usernamePassword(credentialsId: 'Github', usernameVariable: 'GIT_USER',passwordVariable: 'GIT_PASS')]) {
         sh'''
           git config user.name "$GIT_USER"
           git config user.email "jenkins@example.com"
